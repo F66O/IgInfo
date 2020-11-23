@@ -1,7 +1,7 @@
 from telebot import TeleBot
 import  requests
 import time
-r=requests.Session()
+
 bot = TeleBot("810863369:AAHo_ve5b4_nD9-hnL2uLe1699drXmFZMrw")
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
@@ -11,7 +11,7 @@ def send_welcome(message):
 def Send_info(message2):
 	user = message2.text
 	try:
-		infos = r.get("https://www.instagram.com/{}/?__a=1".format(user)).json()
+		infos = requests.get("https://www.instagram.com/{}/?__a=1".format(user)).json()
 		userid = str(infos['logging_page_id'])
 		hid = userid.split('_')[1]
 		bot.send_message(message2.chat.id,text="id : "+hid)
@@ -34,6 +34,7 @@ def Send_info(message2):
 		bot.send_photo(message2.chat.id,photo=pic)
 		private = str(infos['graphql']['user'].get('is_private'))
 		bot.send_message(message2.chat.id,text="is private : "+private)
-	except:
+	except Exception as e:
+		print(e)
 		pass
 bot.polling(True)
